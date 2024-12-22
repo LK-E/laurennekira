@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('DOMContentLoaded', () => {
         // Configurez votre date limite
-        const countdownDate = new Date("Dec 31, 2024 23:59:59").getTime();
+        const countdownDate = new Date("jan 02, 2024 23:59:59").getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
