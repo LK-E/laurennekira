@@ -116,11 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('DOMContentLoaded', () => {
         // Configurez votre date limite
-        const countdownDate = new Date("jan 02, 2024 23:59:59").getTime();
+        const countdownDate = new Date("jan 02, 2025 23:59:59").getTime();
 
         function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = countdownDate - now;
+            const now = new Date();
+           countdownDate.setDate(countdownDate.getDate() + 13);
 
             if (distance < 0) {
                 document.querySelector('.countdown').innerHTML = "Temps écoulé !";
