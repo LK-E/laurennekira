@@ -215,15 +215,20 @@
 
 /*** Hero Header ***/
 .hero-header {
-    position: relative;
     background: linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.7)), 
-                url('../images/Kiraforex-slider-1.jpg');
-    background-size: cover;
-    background-position: center center;
-    height: 100vh; /* Remplir l'écran */
-    animation: background-switch 10s infinite alternate;
-    overflow: hidden;
+                url('../images/conf2.jpg');
+    background-repeat: no-repeat; /* Pas de répétition */
+    background-size: cover; /* Ajuste à l'espace tout en conservant les proportions */
+    background-position: center; /* Centrer l'image */
 }
+
+@media (max-width: 768px) {
+    .hero-header {
+        background-size: contain; /* Garde l'image visible sans déborder */
+        background-position: top center; /* Ajuste pour mieux aligner sur mobile */
+    }
+}
+
 
 /* Animation */
 @keyframes background-switch {
