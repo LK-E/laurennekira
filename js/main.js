@@ -114,35 +114,39 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     });
 
-   document.addEventListener('DOMContentLoaded', () => {
-    // Configurez la date limite à 13 jours à partir d'aujourd'hui
-    let countdownDate = new Date();
-    countdownDate.setDate(countdownDate.getDate() + 13);
-
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownDate.getTime() - now;
-
-        if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
-            return;
+     });
+    document.addEventListener('DOMContentLoaded', () => {
+        // Configurez la date limite à 12 jours et 5 heures à partir de maintenant
+        let countdownDate = new Date();
+        countdownDate.setDate(countdownDate.getDate() + 12); // Ajouter 12 jours
+        countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+    
+        function updateCountdown() {
+            const now = new Date().getTime(); // Heure actuelle en millisecondes
+            const distance = countdownDate.getTime() - now; // Temps restant
+    
+            if (distance < 0) {
+                document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+                return;
+            }
+    
+            // Calcul des jours, heures, minutes, secondes
+            const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+    
+            // Mise à jour des éléments HTML
+            document.getElementById("days").textContent = String(jours).padStart(2, '0');
+            document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
         }
-
-        const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const secondes = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("jours").textContent = String(jours).padStart(2, '0');
-        document.getElementById("hours").textContent = String(heures).padStart(2, '0');
-        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
-    }
-
-    // Mettre à jour toutes les secondes
-    setInterval(updateCountdown, 1000);
-    updateCountdown(); // Exécuter immédiatement
-});
+    
+        // Exécuter la fonction immédiatement et toutes les secondes
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    });    
 
     function initMap() {
         // Coordonnées de Ngeme, Limbe
