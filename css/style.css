@@ -215,10 +215,16 @@
 
 /*** Hero Header ***/
 .hero-header {
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-    background-position: center !important;
+    background: linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.7)), 
+                url('../images/conf2.jpg');
+    background-repeat: no-repeat; /* Empêche toute répétition */
+    background-size: cover; /* S'adapte sans distorsion */
+    background-position: center; /* Centré */
+    height: 100vh; /* Occupe toute la hauteur visible de l'écran */
+    width: 100%; /* Assure que l'image s'étire sur toute la largeur */
+    overflow: hidden; /* Cache tout débordement */
 }
+
 
 
 @media (max-width: 768px) {
