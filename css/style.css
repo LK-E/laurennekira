@@ -215,12 +215,11 @@
 
 /*** Hero Header ***/
 .hero-header {
-    background: linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.7)), 
-                url('../images/conf2.jpg');
-    background-repeat: no-repeat; /* Pas de répétition */
-    background-size: cover; /* Ajuste à l'espace tout en conservant les proportions */
-    background-position: center; /* Centrer l'image */
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
 }
+
 
 @media (max-width: 768px) {
     .hero-header {
