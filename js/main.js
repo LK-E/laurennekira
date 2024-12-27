@@ -112,19 +112,24 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-   const countdownKey = "countdownDate"; // Clé pour le stockage local
+const countdownKey = "countdownDate"; // Clé pour le stockage local
 
-// Vérifier si une date de fin est déjà enregistrée
+function setCountdown(days) {
+    const now = new Date();
+    now.setDate(now.getDate() + days); // Ajouter le nombre de jours souhaité
+    const newCountdownDate = now.getTime(); // Convertir en millisecondes
+    localStorage.setItem(countdownKey, newCountdownDate); // Mettre à jour le stockage local
+    return newCountdownDate;
+}
+
+// Initialisation : Vérifier si une date est enregistrée
 let countdownDate = localStorage.getItem(countdownKey);
 
 if (!countdownDate) {
-    // Si aucune date n'est enregistrée, initialiser à 6 jours à partir de maintenant
-    const now = new Date();
-    now.setDate(now.getDate() + 6); // Ajouter 6 jours
-    countdownDate = now.getTime(); // Enregistrer la date en millisecondes
-    localStorage.setItem(countdownKey, countdownDate); // Sauvegarder dans le stockage local
+    // Si aucune date n'existe, définir à 10 jours
+    countdownDate = setCountdown(10);
 } else {
-    // Convertir la date récupérée en objet Date
+    // Convertir la date récupérée en millisecondes
     countdownDate = parseInt(countdownDate);
 }
 
@@ -148,8 +153,12 @@ function updateCountdown() {
     document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
 }
 
+// Réinitialiser à 10 jours (facultatif, appelez cette ligne si besoin)
+countdownDate = setCountdown(10); // Définir à 10 jours
+
 setInterval(updateCountdown, 1000);
 updateCountdown();
+
 
     // Carte Google Maps
     if (typeof google !== 'undefined' && google.maps) {
