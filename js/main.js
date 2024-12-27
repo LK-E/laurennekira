@@ -112,33 +112,44 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-    // Compte à rebours
-    let countdownDate = new Date();
-    countdownDate.setDate(countdownDate.getDate() + 12); // Ajouter 12 jours
-    countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+   const countdownKey = "countdownDate"; // Clé pour le stockage local
 
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownDate.getTime() - now;
+// Vérifier si une date de fin est déjà enregistrée
+let countdownDate = localStorage.getItem(countdownKey);
 
-        if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
-            return;
-        }
+if (!countdownDate) {
+    // Si aucune date n'est enregistrée, initialiser à 6 jours à partir de maintenant
+    const now = new Date();
+    now.setDate(now.getDate() + 6); // Ajouter 6 jours
+    countdownDate = now.getTime(); // Enregistrer la date en millisecondes
+    localStorage.setItem(countdownKey, countdownDate); // Sauvegarder dans le stockage local
+} else {
+    // Convertir la date récupérée en objet Date
+    countdownDate = parseInt(countdownDate);
+}
 
-        const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
 
-        document.getElementById("days").textContent = String(jours).padStart(2, '0');
-        document.getElementById("hours").textContent = String(heures).padStart(2, '0');
-        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
+    if (distance < 0) {
+        document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+        return;
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("days").textContent = String(jours).padStart(2, '0');
+    document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+    document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+    document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
 
     // Carte Google Maps
     if (typeof google !== 'undefined' && google.maps) {
