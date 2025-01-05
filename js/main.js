@@ -163,8 +163,6 @@ updateCountdown();
 
 
 
-
-
     // Carte Google Maps
     if (typeof google !== 'undefined' && google.maps) {
         const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
