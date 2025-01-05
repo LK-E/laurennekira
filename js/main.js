@@ -125,6 +125,15 @@ if (!localStorage.getItem(countdownKey)) {
     localStorage.setItem(countdownKey, now.getTime()); // Sauvegarder la date de fin dans le stockage local
 }
 
+const countdownKey = "countdownDate"; // Clé pour le stockage local
+
+// Initialiser la date de fin uniquement si elle n'est pas déjà enregistrée
+if (!localStorage.getItem(countdownKey)) {
+    const now = new Date();
+    now.setDate(now.getDate() + 5); // Ajouter 5 jours à partir de maintenant
+    localStorage.setItem(countdownKey, now.getTime()); // Sauvegarder la date de fin dans le stockage local
+}
+
 // Fonction pour mettre à jour l'affichage du compte à rebours
 function updateCountdown() {
     const now = new Date().getTime();
