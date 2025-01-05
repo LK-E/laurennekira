@@ -114,22 +114,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const countdownKey = "countdownDate"; // Clé pour le stockage local
 
-// Vérifier si une date de fin est déjà enregistrée
-let countdownDate = localStorage.getItem(countdownKey);
-
-if (!countdownDate) {
-    // Si aucune date n'est enregistrée, initialiser à 10 jours à partir de maintenant
+// Fonction pour ajouter des jours au compte à rebours
+function addDaysToCountdown(days) {
     const now = new Date();
-    now.setDate(now.getDate() + 10); // Ajouter 10 jours
-    countdownDate = now.getTime(); // Enregistrer la date en millisecondes
-    localStorage.setItem(countdownKey, countdownDate); // Sauvegarder dans le stockage local
-} else {
-    // Convertir la date récupérée en millisecondes
-    countdownDate = parseInt(countdownDate);
+    let countdownDate = localStorage.getItem(countdownKey);
+
+    if (countdownDate) {
+        countdownDate = parseInt(countdownDate);
+        const currentEndDate = new Date(countdownDate);
+        currentEndDate.setDate(currentEndDate.getDate() + days); // Ajouter les jours
+        localStorage.setItem(countdownKey, currentEndDate.getTime()); // Sauvegarder la nouvelle date
+    } else {
+        now.setDate(now.getDate() + days); // Initialiser une nouvelle date
+        localStorage.setItem(countdownKey, now.getTime());
+    }
 }
 
+// Appelle cette fonction pour ajouter 5 jours
+addDaysToCountdown(5); // Ajoute 5 jours au compte à rebours
+
+// Fonction pour mettre à jour l'affichage du compte à rebours
 function updateCountdown() {
     const now = new Date().getTime();
+    let countdownDate = localStorage.getItem(countdownKey);
+    countdownDate = parseInt(countdownDate);
+
     const distance = countdownDate - now;
 
     if (distance < 0) {
@@ -151,6 +160,7 @@ function updateCountdown() {
 // Mettre à jour l'affichage chaque seconde
 setInterval(updateCountdown, 1000);
 updateCountdown();
+
 
 
 
