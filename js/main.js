@@ -114,8 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const countdownKey = "countdownDate"; // Clé pour le stockage local
 
-const countdownKey = "countdownDate"; // Clé pour le stockage local
-
 // Fonction pour ajouter des jours au compte à rebours
 function addDaysToCountdown(days) {
     const now = new Date();
