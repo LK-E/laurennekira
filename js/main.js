@@ -25,24 +25,20 @@
 
     // Dropdown on mouse hover
     const $dropdown = $(".dropdown");
-    const $dropdownToggle = $(".dropdown-toggle");
-    const $dropdownMenu = $(".dropdown-menu");
     const showClass = "show";
 
     $(window).on("load resize", function () {
         if (this.matchMedia("(min-width: 992px)").matches) {
             $dropdown.hover(
                 function () {
-                    const $this = $(this);
-                    $this.addClass(showClass);
-                    $this.find($dropdownToggle).attr("aria-expanded", "true");
-                    $this.find($dropdownMenu).addClass(showClass);
+                    $(this).addClass(showClass)
+                        .find('.dropdown-toggle').attr("aria-expanded", "true")
+                        .end().find('.dropdown-menu').addClass(showClass);
                 },
                 function () {
-                    const $this = $(this);
-                    $this.removeClass(showClass);
-                    $this.find($dropdownToggle).attr("aria-expanded", "false");
-                    $this.find($dropdownMenu).removeClass(showClass);
+                    $(this).removeClass(showClass)
+                        .find('.dropdown-toggle').attr("aria-expanded", "false")
+                        .end().find('.dropdown-menu').removeClass(showClass);
                 }
             );
         } else {
@@ -74,15 +70,9 @@
         loop: true,
         nav: false,
         responsive: {
-            0: {
-                items: 1
-            },
-            768: {
-                items: 2
-            },
-            992: {
-                items: 3
-            }
+            0: { items: 1 },
+            768: { items: 2 },
+            992: { items: 3 }
         }
     });
 
@@ -92,10 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Animation sur le header
     const heroHeader = document.querySelector('.hero-header');
     if (heroHeader) {
-        heroHeader.classList.add('animate'); // Activer
-        setTimeout(() => {
-            heroHeader.classList.remove('animate'); // Désactiver après un délai
-        }, 3000);
+        heroHeader.classList.add('animate');
+        setTimeout(() => heroHeader.classList.remove('animate'), 3000);
     }
 
     // Rotation des mots
@@ -112,70 +100,44 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-const countdownKey = "countdownDate"; // Clé pour le stockage local
+    // Gestion du compte à rebours
+    const countdownKey = "countdownDate";
 
-// Réinitialiser la date de fin pour forcer 5 jours (uniquement pour la correction initiale)
-// Supprime la clé existante si nécessaire
-localStorage.removeItem(countdownKey);
-
-// Initialiser la date de fin uniquement si elle n'est pas déjà enregistrée
-if (!localStorage.getItem(countdownKey)) {
-    const now = new Date();
-    now.setDate(now.getDate() + 5); // Ajouter 5 jours à partir de maintenant
-    localStorage.setItem(countdownKey, now.getTime()); // Sauvegarder la date de fin dans le stockage local
-}
-
-const countdownKey = "countdownDate"; // Clé pour le stockage local
-
-// Initialiser la date de fin uniquement si elle n'est pas déjà enregistrée
-if (!localStorage.getItem(countdownKey)) {
-    const now = new Date();
-    now.setDate(now.getDate() + 5); // Ajouter 5 jours à partir de maintenant
-    localStorage.setItem(countdownKey, now.getTime()); // Sauvegarder la date de fin dans le stockage local
-}
-
-// Fonction pour mettre à jour l'affichage du compte à rebours
-function updateCountdown() {
-    const now = new Date().getTime();
-    const countdownDate = parseInt(localStorage.getItem(countdownKey), 10);
-
-    const distance = countdownDate - now;
-
-    if (distance < 0) {
-        document.querySelector('.countdown').innerHTML = "Temps écoulé !";
-        return;
+    if (!localStorage.getItem(countdownKey)) {
+        const now = new Date();
+        now.setDate(now.getDate() + 5); // 5 jours à partir de maintenant
+        localStorage.setItem(countdownKey, now.getTime());
     }
 
-    const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const countdownDate = parseInt(localStorage.getItem(countdownKey), 10);
 
-    document.getElementById("days").textContent = String(jours).padStart(2, '0');
-    document.getElementById("hours").textContent = String(heures).padStart(2, '0');
-    document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-    document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
-}
+        const distance = countdownDate - now;
 
-// Mettre à jour l'affichage chaque seconde
-setInterval(updateCountdown, 1000);
-updateCountdown();
+        if (distance < 0) {
+            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+            return;
+        }
 
+        const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
+        document.getElementById("days").textContent = String(jours).padStart(2, '0');
+        document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+        document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
     // Carte Google Maps
     if (typeof google !== 'undefined' && google.maps) {
         const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
-
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 14,
-            center: ngemeLimbe,
-        });
-
-        new google.maps.Marker({
-            position: ngemeLimbe,
-            map: map,
-            title: "LKE",
-        });
+        const map = new google.maps.Map(document.getElementById("map"), { zoom: 14, center: ngemeLimbe });
+        new google.maps.Marker({ position: ngemeLimbe, map: map, title: "LKE" });
     }
 });
