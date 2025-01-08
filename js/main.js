@@ -100,19 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-    
-document.addEventListener('DOMContentLoaded', () => {
-    const countdownKey = "countdownDate"; // Clé pour le stockage local
-
-    // Fonction pour définir ou réinitialiser la date de fin à 9 jours
-    function resetCountdown() {
-        const now = new Date(); // Obtenir la date actuelle
-        now.setDate(now.getDate() + 9); // Ajouter 9 jours
-        const newCountdownDate = now.getTime(); // Convertir en millisecondes
-        localStorage.setItem(countdownKey, newCountdownDate); // Sauvegarder dans le stockage local
-        return newCountdownDate; // Retourner la nouvelle date
-    }
-document.addEventListener('DOMContentLoaded', () => {
+    // Compte à rebours
     const countdownKey = "countdownDate";
 
     // Fonction pour définir ou réinitialiser la date de fin à 9 jours
@@ -162,23 +150,22 @@ document.addEventListener('DOMContentLoaded', () => {
         countdownDate = resetCountdown();
         alert("Le compte à rebours a été réinitialisé à 9 jours !");
     });
-});
 
+    // Gestion Google Maps (si nécessaire)
+    if (typeof google !== 'undefined' && google.maps) {
+        const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
+        const mapElement = document.getElementById("map");
 
-// Gestion Google Maps (si nécessaire)
-if (typeof google !== 'undefined' && google.maps) {
-    const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
-    const mapElement = document.getElementById("map");
-
-    if (mapElement) {
-        const map = new google.maps.Map(mapElement, {
-            zoom: 14,
-            center: ngemeLimbe
-        });
-        new google.maps.Marker({
-            position: ngemeLimbe,
-            map: map,
-            title: "LKE"
-        });
+        if (mapElement) {
+            const map = new google.maps.Map(mapElement, {
+                zoom: 14,
+                center: ngemeLimbe
+            });
+            new google.maps.Marker({
+                position: ngemeLimbe,
+                map: map,
+                title: "LKE"
+            });
+        }
     }
-}
+});
