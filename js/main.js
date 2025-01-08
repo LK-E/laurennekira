@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     });
 document.addEventListener('DOMContentLoaded', () => {
-    const countdownDuration = 10 * 24 * 60 * 60 * 1000; // 10 jours en millisecondes
+    const countdownDuration = 16 * 24 * 60 * 60 * 1000; // 16 jours en millisecondes
     const storageKey = "countdownEndTime";
 
     // Vérifier si une date de fin existe dans le localStorage
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!countdownEndTime) {
         // Si aucune date de fin n'est trouvée, en créer une nouvelle
         const now = new Date().getTime();
-        countdownEndTime = now + countdownDuration; // Ajoutez 10 jours à l'heure actuelle
+        countdownEndTime = now + countdownDuration; // Ajoutez 16 jours à l'heure actuelle
         localStorage.setItem(storageKey, countdownEndTime); // Stocker la nouvelle date de fin
     } else {
         countdownEndTime = parseInt(countdownEndTime, 10); // Convertir en nombre
@@ -145,11 +145,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Mettre à jour les éléments HTML
-        document.getElementById("days").textContent = String(days).padStart(2, '0');
-        document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+        // Mettre à jour les éléments HTML avec des animations
+        updateElementWithEffect("days", days);
+        updateElementWithEffect("hours", hours);
+        updateElementWithEffect("minutes", minutes);
+        updateElementWithEffect("seconds", seconds);
+    }
+
+    // Fonction pour mettre à jour un élément avec une animation
+    function updateElementWithEffect(id, value) {
+        const element = document.getElementById(id);
+        const newValue = String(value).padStart(2, '0');
+
+        if (element.textContent !== newValue) {
+            element.classList.add("animate");
+            setTimeout(() => element.classList.remove("animate"), 500);
+            element.textContent = newValue;
+        }
     }
 
     // Exécuter la fonction immédiatement et toutes les secondes
@@ -157,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCountdown();
 });
 
-    
 
     function initMap() {
         // Coordonnées de Ngeme, Limbe
