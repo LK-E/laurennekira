@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-document.addEventListener('DOMContentLoaded', () => {
+    // Compte à rebours
     const countdownKey = "countdownDate";
 
     // Initialiser la date de fin uniquement si elle n'est pas déjà enregistrée
@@ -134,8 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-});
-
 
     // Carte Google Maps
     if (typeof google !== 'undefined' && google.maps) {
