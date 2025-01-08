@@ -114,24 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     });
 document.addEventListener('DOMContentLoaded', () => {
-    // Configurez la date limite (exemple : 16 jours et 5 heures à partir de maintenant)
-    const countdownKey = 'countdownEndTime'; // Clé pour localStorage
-    let countdownDate;
+    "use strict";
 
-    if (localStorage.getItem(countdownKey)) {
-        // Charger la date depuis localStorage
-        countdownDate = new Date(localStorage.getItem(countdownKey));
-    } else {
-        // Initialiser une nouvelle date limite si elle n'existe pas
-        countdownDate = new Date();
-        countdownDate.setDate(countdownDate.getDate() + 16); // Ajouter 16 jours
-        countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
-        localStorage.setItem(countdownKey, countdownDate.toISOString()); // Sauvegarder la date
-    }
+    // Définir une date limite universelle (exemple : 2025-01-20 à 12h00 UTC)
+    const countdownEndDate = new Date('2025-01-20T12:00:00Z');
 
     function updateCountdown() {
         const now = new Date().getTime(); // Heure actuelle en millisecondes
-        const distance = countdownDate.getTime() - now; // Temps restant
+        const distance = countdownEndDate.getTime() - now; // Temps restant
 
         if (distance < 0) {
             document.querySelector('.countdown').innerHTML = "Temps écoulé !";
