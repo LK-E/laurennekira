@@ -116,8 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
-    // Définir une date limite universelle (exemple : 2025-01-20 à 12h00 UTC)
-    const countdownEndDate = new Date('2025-01-20T12:00:00Z');
+    // Définir une date limite universelle : 16 jours après une date initiale (8 janvier 2025 à 12h UTC)
+    const countdownEndDate = new Date('2025-01-24T12:00:00Z'); // Date fixe à 16 jours après 2025-01-08
 
     function updateCountdown() {
         const now = new Date().getTime(); // Heure actuelle en millisecondes
