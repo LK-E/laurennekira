@@ -11,8 +11,10 @@
     };
     spinner();
     
+    
     // Initiate the wowjs
     new WOW().init();
+
 
     // Sticky Navbar
     $(window).scroll(function () {
@@ -23,6 +25,7 @@
         }
     });
     
+    
     // Dropdown on mouse hover
     const $dropdown = $(".dropdown");
     const $dropdownToggle = $(".dropdown-toggle");
@@ -32,23 +35,24 @@
     $(window).on("load resize", function() {
         if (this.matchMedia("(min-width: 992px)").matches) {
             $dropdown.hover(
-                function() {
-                    const $this = $(this);
-                    $this.addClass(showClass);
-                    $this.find($dropdownToggle).attr("aria-expanded", "true");
-                    $this.find($dropdownMenu).addClass(showClass);
-                },
-                function() {
-                    const $this = $(this);
-                    $this.removeClass(showClass);
-                    $this.find($dropdownToggle).attr("aria-expanded", "false");
-                    $this.find($dropdownMenu).removeClass(showClass);
-                }
+            function() {
+                const $this = $(this);
+                $this.addClass(showClass);
+                $this.find($dropdownToggle).attr("aria-expanded", "true");
+                $this.find($dropdownMenu).addClass(showClass);
+            },
+            function() {
+                const $this = $(this);
+                $this.removeClass(showClass);
+                $this.find($dropdownToggle).attr("aria-expanded", "false");
+                $this.find($dropdownMenu).removeClass(showClass);
+            }
             );
         } else {
             $dropdown.off("mouseenter mouseleave");
         }
     });
+    
     
     // Back to top button
     $(window).scroll(function () {
@@ -63,6 +67,7 @@
         return false;
     });
 
+
     // Testimonials carousel
     $(".testimonial-carousel").owlCarousel({
         autoplay: true,
@@ -73,88 +78,90 @@
         loop: true,
         nav : false,
         responsive: {
-            0: { items: 1 },
-            768: { items: 2 },
-            992: { items: 3 }
+            0:{
+                items:1
+            },
+            768:{
+                items:2
+            },
+            992:{
+                items:3
+            }
         }
     });
+    
 })(jQuery);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const wordItems = document.querySelectorAll('.word-item');
-    let currentWordIndex = 0;
-
-    function rotateWords() {
-        wordItems[currentWordIndex].classList.remove('active');
-        currentWordIndex = (currentWordIndex + 1) % wordItems.length;
-        wordItems[currentWordIndex].classList.add('active');
-    }
-
-    setInterval(rotateWords, 2000);
-});
+document.querySelector('.hero-header').classList.add('animate'); // Activer
+document.querySelector('.hero-header').classList.remove('animate'); // Désactiver
 
 document.addEventListener('DOMContentLoaded', () => {
-    const COUNTDOWN_KEY = 'countdownDeadline'; 
-    const COUNTDOWN_DURATION = 16 * 24 * 60 * 60 * 1000;
+        const wordItems = document.querySelectorAll('.word-item');
+        let currentWordIndex = 0;
 
-    if (typeof Storage === "undefined") {
-        console.error("localStorage n'est pas pris en charge par ce navigateur.");
-        return;
-    }
+        function rotateWords() {
+            // Enlever l'état actif de l'élément actuel
+            wordItems[currentWordIndex].classList.remove('active');
 
-    let countdownDate;
-    const savedCountdown = localStorage.getItem(COUNTDOWN_KEY);
-    if (savedCountdown) {
-        countdownDate = new Date(savedCountdown);
-    } else {
-        countdownDate = new Date(Date.now() + COUNTDOWN_DURATION);
-        localStorage.setItem(COUNTDOWN_KEY, countdownDate.toISOString());
-    }
+            // Passer au mot suivant
+            currentWordIndex = (currentWordIndex + 1) % wordItems.length;
 
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownDate.getTime() - now;
-
-        if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
-            return;
+            // Ajouter l'état actif au nouveau mot
+            wordItems[currentWordIndex].classList.add('active');
         }
 
-        const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const secondes = Math.floor((distance % (1000 * 60)) / 1000);
-
-        const daysElem = document.getElementById("days");
-        const hoursElem = document.getElementById("hours");
-        const minutesElem = document.getElementById("minutes");
-        const secondsElem = document.getElementById("seconds");
-
-        if (daysElem && hoursElem && minutesElem && secondsElem) {
-            daysElem.textContent = String(jours).padStart(2, '0');
-            hoursElem.textContent = String(heures).padStart(2, '0');
-            minutesElem.textContent = String(minutes).padStart(2, '0');
-            secondsElem.textContent = String(secondes).padStart(2, '0');
-        } else {
-            console.error("Éléments du compte à rebours manquants dans le DOM.");
+        // Changer le mot toutes les 2 secondes
+        setInterval(rotateWords, 2000);
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        // Configurez la date limite à 12 jours et 5 heures à partir de maintenant
+        let countdownDate = new Date();
+        countdownDate.setDate(countdownDate.getDate() + 12); // Ajouter 12 jours
+        countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+    
+        function updateCountdown() {
+            const now = new Date().getTime(); // Heure actuelle en millisecondes
+            const distance = countdownDate.getTime() - now; // Temps restant
+    
+            if (distance < 0) {
+                document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+                return;
+            }
+    
+            // Calcul des jours, heures, minutes, secondes
+            const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+    
+            // Mise à jour des éléments HTML
+            document.getElementById("days").textContent = String(jours).padStart(2, '0');
+            document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
         }
+    
+        // Exécuter la fonction immédiatement et toutes les secondes
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    });    
+
+    
+
+    function initMap() {
+        // Coordonnées de Ngeme, Limbe
+        const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
+
+        // Créer la carte centrée sur Ngeme
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 14,
+            center: ngemeLimbe,
+        });
+
+        // Ajouter un marqueur
+        const marker = new google.maps.Marker({
+            position: ngemeLimbe,
+            map: map,
+            title: "LKE",
+        });
     }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-});
-
-function initMap() {
-    const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
-
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 14,
-        center: ngemeLimbe,
-    });
-
-    new google.maps.Marker({
-        position: ngemeLimbe,
-        map: map,
-        title: "LKE",
-    });
-}
