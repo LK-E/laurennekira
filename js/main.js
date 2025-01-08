@@ -169,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCountdown();
 });
 
-
     function initMap() {
         // Coordonnées de Ngeme, Limbe
         const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
