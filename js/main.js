@@ -100,60 +100,64 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const countdownKey = "countdownDate"; // Clé pour le stockage local
+    // Initialisation de la clé pour le compte à rebours
+    const countdownKey = "countdownDate";
 
-    // Fonction pour réinitialiser ou définir la date de fin
-    function resetCountdown() {
-        const now = new Date(); // Obtenir la date actuelle
-        now.setDate(now.getDate() + 9); // Ajouter 9 jours
-        localStorage.setItem(countdownKey, now.getTime()); // Enregistrer la nouvelle date
+    // Fonction pour ajouter un certain nombre de jours au compte à rebours
+    function resetCountdown(daysToAdd) {
+        const now = new Date();
+        now.setDate(now.getDate() + daysToAdd);
+        localStorage.setItem(countdownKey, now.getTime());
     }
 
-    // Vérifier si une date existe déjà et si elle est encore valide
-    const storedDate = localStorage.getItem(countdownKey);
-    if (!storedDate || parseInt(storedDate, 10) < new Date().getTime()) {
-        resetCountdown(); // Réinitialiser si aucune date ou date expirée
+    // Vérification ou réinitialisation du compte à rebours
+    let countdownDate = localStorage.getItem(countdownKey);
+    const now = new Date().getTime();
+
+    if (!countdownDate || parseInt(countdownDate, 10) < now) {
+        resetCountdown(5); // Ajouter 5 jours
+        countdownDate = localStorage.getItem(countdownKey);
     }
 
     // Fonction pour mettre à jour le compte à rebours
     function updateCountdown() {
-        const now = new Date().getTime(); // Obtenir le temps actuel en millisecondes
-        const countdownDate = parseInt(localStorage.getItem(countdownKey), 10); // Récupérer la date cible
-
-        const distance = countdownDate - now; // Calculer la différence
+        const distance = parseInt(countdownDate, 10) - new Date().getTime();
 
         if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !"; // Message si temps écoulé
+            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
             return;
         }
 
-        // Calcul des jours, heures, minutes et secondes restants
         const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
         const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Mise à jour de l'affichage
         document.getElementById("days").textContent = String(jours).padStart(2, '0');
         document.getElementById("hours").textContent = String(heures).padStart(2, '0');
         document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
         document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
-    // Démarrer le compte à rebours avec un intervalle d'une seconde
+    // Mettre à jour toutes les secondes
     setInterval(updateCountdown, 1000);
-
-    // Mise à jour initiale
     updateCountdown();
 });
 
-});
+// Gestion Google Maps (si nécessaire)
+if (typeof google !== 'undefined' && google.maps) {
+    const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
+    const mapElement = document.getElementById("map");
 
-    // Carte Google Maps
-    if (typeof google !== 'undefined' && google.maps) {
-        const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
-        const map = new google.maps.Map(document.getElementById("map"), { zoom: 14, center: ngemeLimbe });
-        new google.maps.Marker({ position: ngemeLimbe, map: map, title: "LKE" });
+    if (mapElement) {
+        const map = new google.maps.Map(mapElement, {
+            zoom: 14,
+            center: ngemeLimbe
+        });
+        new google.maps.Marker({
+            position: ngemeLimbe,
+            map: map,
+            title: "LKE"
+        });
     }
-});
+}
