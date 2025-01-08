@@ -100,65 +100,38 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Fonction de réinitialisation
-    const countdownKey = "countdownDate"; // Clé pour le stockage local
-
-    // Fonction pour définir ou réinitialiser la date de fin à 9 jours
-    function resetCountdown() {
-        const now = new Date();
-        now.setDate(now.getDate() + 9); // Ajouter 9 jours
-        const newCountdownDate = now.getTime(); // Convertir en millisecondes
-        localStorage.setItem(countdownKey, newCountdownDate); // Sauvegarder dans le stockage local
-        return newCountdownDate;
-    }
-
-    // Vérifier si une date existe déjà
-    let countdownDate = localStorage.getItem(countdownKey);
-    if (!countdownDate || parseInt(countdownDate, 10) < new Date().getTime()) {
-        countdownDate = resetCountdown(); // Réinitialiser si aucune date ou si expirée
-    } else {
-        countdownDate = parseInt(countdownDate, 10); // Convertir en entier
-    }
-
-    // Fonction pour mettre à jour le compte à rebours
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownDate - now;
-
-        if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
-            return;
+   document.addEventListener('DOMContentLoaded', () => {
+        // Configurez la date limite à 12 jours et 5 heures à partir de maintenant
+        let countdownDate = new Date();
+        countdownDate.setDate(countdownDate.getDate() + 12); // Ajouter 12 jours
+        countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+    
+        function updateCountdown() {
+            const now = new Date().getTime(); // Heure actuelle en millisecondes
+            const distance = countdownDate.getTime() - now; // Temps restant
+    
+            if (distance < 0) {
+                document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+                return;
+            }
+    
+            // Calcul des jours, heures, minutes, secondes
+            const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+    
+            // Mise à jour des éléments HTML
+            document.getElementById("days").textContent = String(jours).padStart(2, '0');
+            document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
         }
-
-        const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const secondes = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("days").textContent = String(jours).padStart(2, '0');
-        document.getElementById("hours").textContent = String(heures).padStart(2, '0');
-        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
-    }
-
-    // Mise à jour du compte à rebours toutes les secondes
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-    // Vérification et gestion du bouton de réinitialisation
-    setTimeout(() => {
-        const resetButton = document.getElementById('resetCountdown');
-        if (resetButton) {
-            resetButton.addEventListener('click', () => {
-                countdownDate = resetCountdown();
-                alert("Le compte à rebours a été réinitialisé à 9 jours !");
-            });
-        } else {
-            console.error('Le bouton de réinitialisation n\'a pas été trouvé dans le DOM.');
-        }
-    }, 100); // Attendre un petit moment pour garantir que l'élément est disponible
-});
+    
+        // Exécuter la fonction immédiatement et toutes les secondes
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    });    
 
 
     // Gestion Google Maps (si nécessaire)
