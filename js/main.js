@@ -103,25 +103,28 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const countdownKey = "countdownDate"; // Clé pour le stockage local
 
-    // Fonction pour réinitialiser le compte à rebours à 9 jours
+    // Fonction pour réinitialiser ou définir la date de fin
     function resetCountdown() {
-        const now = new Date();
-        now.setDate(now.getDate() + 9); // Ajouter 9 jours à partir de maintenant
-        localStorage.setItem(countdownKey, now.getTime()); // Sauvegarder la nouvelle date de fin
+        const now = new Date(); // Obtenir la date actuelle
+        now.setDate(now.getDate() + 9); // Ajouter 9 jours
+        localStorage.setItem(countdownKey, now.getTime()); // Enregistrer la nouvelle date
     }
 
-    // Réinitialiser le compte à rebours si besoin (supprimez cette ligne si ce n'est pas nécessaire)
-    resetCountdown();
+    // Vérifier si une date existe déjà et si elle est encore valide
+    const storedDate = localStorage.getItem(countdownKey);
+    if (!storedDate || parseInt(storedDate, 10) < new Date().getTime()) {
+        resetCountdown(); // Réinitialiser si aucune date ou date expirée
+    }
 
-    // Fonction pour mettre à jour l'affichage du compte à rebours
+    // Fonction pour mettre à jour le compte à rebours
     function updateCountdown() {
-        const now = new Date().getTime(); // Temps actuel en millisecondes
-        const countdownDate = parseInt(localStorage.getItem(countdownKey), 10); // Récupérer la date enregistrée
+        const now = new Date().getTime(); // Obtenir le temps actuel en millisecondes
+        const countdownDate = parseInt(localStorage.getItem(countdownKey), 10); // Récupérer la date cible
 
         const distance = countdownDate - now; // Calculer la différence
 
         if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+            document.querySelector('.countdown').innerHTML = "Temps écoulé !"; // Message si temps écoulé
             return;
         }
 
@@ -131,18 +134,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Mettre à jour les éléments HTML
+        // Mise à jour de l'affichage
         document.getElementById("days").textContent = String(jours).padStart(2, '0');
         document.getElementById("hours").textContent = String(heures).padStart(2, '0');
         document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
         document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
-    // Mettre à jour le compte à rebours chaque seconde
+    // Démarrer le compte à rebours avec un intervalle d'une seconde
     setInterval(updateCountdown, 1000);
 
-    // Initialiser le compte à rebours
+    // Mise à jour initiale
     updateCountdown();
+});
+
 });
 
     // Carte Google Maps
