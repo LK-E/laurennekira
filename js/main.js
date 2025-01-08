@@ -100,15 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-    // Compte à rebours
-    const countdownKey = "countdownDate";
+document.addEventListener('DOMContentLoaded', () => {
+    // Fonction de réinitialisation
+    const countdownKey = "countdownDate"; // Clé pour le stockage local
 
     // Fonction pour définir ou réinitialiser la date de fin à 9 jours
     function resetCountdown() {
         const now = new Date();
         now.setDate(now.getDate() + 9); // Ajouter 9 jours
-        const newCountdownDate = now.getTime();
-        localStorage.setItem(countdownKey, newCountdownDate);
+        const newCountdownDate = now.getTime(); // Convertir en millisecondes
+        localStorage.setItem(countdownKey, newCountdownDate); // Sauvegarder dans le stockage local
         return newCountdownDate;
     }
 
@@ -145,11 +146,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Gestion du bouton de réinitialisation
-    document.getElementById('resetCountdown').addEventListener('click', () => {
-        countdownDate = resetCountdown();
-        alert("Le compte à rebours a été réinitialisé à 9 jours !");
-    });
+    // Vérification et gestion du bouton de réinitialisation
+    setTimeout(() => {
+        const resetButton = document.getElementById('resetCountdown');
+        if (resetButton) {
+            resetButton.addEventListener('click', () => {
+                countdownDate = resetCountdown();
+                alert("Le compte à rebours a été réinitialisé à 9 jours !");
+            });
+        } else {
+            console.error('Le bouton de réinitialisation n\'a pas été trouvé dans le DOM.');
+        }
+    }, 100); // Attendre un petit moment pour garantir que l'élément est disponible
+});
+
 
     // Gestion Google Maps (si nécessaire)
     if (typeof google !== 'undefined' && google.maps) {
