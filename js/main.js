@@ -113,61 +113,40 @@ document.addEventListener('DOMContentLoaded', () => {
         // Changer le mot toutes les 2 secondes
         setInterval(rotateWords, 2000);
     });
-document.addEventListener('DOMContentLoaded', () => {
-    const countdownDuration = 16 * 24 * 60 * 60 * 1000; // 16 jours en millisecondes
-    const storageKey = "countdownEndTime";
-
-    // Vérifier si une date de fin existe dans le localStorage
-    let countdownEndTime = localStorage.getItem(storageKey);
-
-    if (!countdownEndTime) {
-        // Si aucune date de fin n'est trouvée, en créer une nouvelle
-        const now = new Date().getTime();
-        countdownEndTime = now + countdownDuration; // Ajoutez 16 jours à l'heure actuelle
-        localStorage.setItem(storageKey, countdownEndTime); // Stocker la nouvelle date de fin
-    } else {
-        countdownEndTime = parseInt(countdownEndTime, 10); // Convertir en nombre
-    }
-
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownEndTime - now;
-
-        if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
-            localStorage.removeItem(storageKey); // Nettoyer le stockage local
-            return;
+    document.addEventListener('DOMContentLoaded', () => {
+        // Configurez la date limite à 12 jours et 5 heures à partir de maintenant
+        let countdownDate = new Date();
+        countdownDate.setDate(countdownDate.getDate() + 12); // Ajouter 12 jours
+        countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+    
+        function updateCountdown() {
+            const now = new Date().getTime(); // Heure actuelle en millisecondes
+            const distance = countdownDate.getTime() - now; // Temps restant
+    
+            if (distance < 0) {
+                document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+                return;
+            }
+    
+            // Calcul des jours, heures, minutes, secondes
+            const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+    
+            // Mise à jour des éléments HTML
+            document.getElementById("days").textContent = String(jours).padStart(2, '0');
+            document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
         }
+    
+        // Exécuter la fonction immédiatement et toutes les secondes
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    });    
 
-        // Calculer les jours, heures, minutes et secondes restants
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Mettre à jour les éléments HTML avec des animations
-        updateElementWithEffect("days", days);
-        updateElementWithEffect("hours", hours);
-        updateElementWithEffect("minutes", minutes);
-        updateElementWithEffect("seconds", seconds);
-    }
-
-    // Fonction pour mettre à jour un élément avec une animation
-    function updateElementWithEffect(id, value) {
-        const element = document.getElementById(id);
-        const newValue = String(value).padStart(2, '0');
-
-        if (element.textContent !== newValue) {
-            element.classList.add("animate");
-            setTimeout(() => element.classList.remove("animate"), 500);
-            element.textContent = newValue;
-        }
-    }
-
-    // Exécuter la fonction immédiatement et toutes les secondes
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-});
+    
 
     function initMap() {
         // Coordonnées de Ngeme, Limbe
