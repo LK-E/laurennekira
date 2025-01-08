@@ -99,16 +99,55 @@ document.addEventListener('DOMContentLoaded', () => {
     if (wordItems.length > 0) {
         setInterval(rotateWords, 2000);
     }
-document.addEventListener('DOMContentLoaded', () => {
-            // Configurez la date limite à 9 jours et 5 heures à partir de maintenant
-            let countdownDate = new Date();
-            countdownDate.setDate(countdownDate.getDate() + 9); // Ajouter 9 jours
-            countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifier si la date limite est déjà stockée
+            let countdownDate = localStorage.getItem('cou
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifier si la date limite est déjà stockée
+            let countdownDate = localStorage.getItem('countdownDate');
+
+            // Si aucune date limite n'est stockée, définir une nouvelle date limite de 9 jours et 5 heures
+            if (!countdownDate) {
+                countdownDate = new Date();
+                countdownDate.setDate(countdownDate.getDate() + 9); // Ajouter 9 jours
+                countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+
+                // Stocker la date limite dans localStorage
+                localStorage.setItem('countdownDate', countdownDate.toString());
+            } else {
+                countdownDate = new Date(countdownDate); // Convertir la chaîne en objet Date
+            }
 
             function updateCountdown() {
                 const now = new Date().getTime(); // Heure actuelle en millisecondes
                 const distance = countdownDate.getTime() - now; // Temps restant
 
+                // Si le compte à rebours est terminé
+                if (distance < 0) {
+                    document.querySelector('.countdown').innerHTML = "Temps é
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifier si la date limite est déjà stockée
+            let countdownDate = localStorage.getItem('countdownDate');
+
+            // Si aucune date limite n'est stockée, définir une nouvelle date limite de 9 jours et 5 heures
+            if (!countdownDate) {
+                countdownDate = new Date();
+                countdownDate.setDate(countdownDate.getDate() + 9); // Ajouter 9 jours
+                countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+
+                // Stocker la date limite dans localStorage
+                localStorage.setItem('countdownDate', countdownDate.toString());
+            } else {
+                countdownDate = new Date(countdownDate); // Convertir la chaîne en objet Date
+            }
+
+            function updateCountdown() {
+                const now = new Date().getTime(); // Heure actuelle en millisecondes
+                const distance = countdownDate.getTime() - now; // Temps restant
+
+                // Si le compte à rebours est terminé
                 if (distance < 0) {
                     document.querySelector('.countdown').innerHTML = "Temps écoulé !";
                     return;
@@ -120,8 +159,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Déboguer avec un console.log()
-                console.log(`Jours: ${jours}, Heures: ${heures}, Minutes: ${minutes}, Secondes: ${secondes}`);
+                // Mise à jour des éléments HTML
+                document.getElementById("days").textContent = String(jours).padStart(2, '0');
+                document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+                document.getElementById("min
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifier si la date limite est déjà stockée
+            let countdownDate = localStorage.getItem('countdownDate');
+
+            // Si aucune date limite n'est stockée, définir une nouvelle date limite de 9 jours et 5 heures
+            if (!countdownDate) {
+                countdownDate = new Date();
+                countdownDate.setDate(countdownDate.getDate() + 9); // Ajouter 9 jours
+                countdownDate.setHours(countdownDate.getHours() + 5); // Ajouter 5 heures
+
+                // Stocker la date limite dans localStorage
+                localStorage.setItem('countdownDate', countdownDate.toString());
+            } else {
+                countdownDate = new Date(countdownDate); // Convertir la chaîne en objet Date
+            }
+
+            function updateCountdown() {
+                const now = new Date().getTime(); // Heure actuelle en millisecondes
+                const distance = countdownDate.getTime() - now; // Temps restant
+
+                // Si le compte à rebours est terminé
+                if (distance < 0) {
+                    document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+                    return;
+                }
+
+                // Calcul des jours, heures, minutes, secondes
+                const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
                 // Mise à jour des éléments HTML
                 document.getElementById("days").textContent = String(jours).padStart(2, '0');
@@ -134,8 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setInterval(updateCountdown, 1000);
             updateCountdown();
         });
-
-
     // Gestion Google Maps (si nécessaire)
     if (typeof google !== 'undefined' && google.maps) {
         const ngemeLimbe = { lat: 4.0173, lng: 9.2012 };
