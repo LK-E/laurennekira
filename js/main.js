@@ -101,74 +101,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     
- 
-const countdownKey = "countdownDate";
+document.addEventListener('DOMContentLoaded', () => {
+    const countdownKey = "countdownDate"; // Clé pour le stockage local
 
-    // Vérification ou réinitialisation du compte à rebours
-    
-  
-let countdownDate = localStorage.getItem(countdownKey);
-    
- 
-const now = new Date().getTime();
+    // Fonction pour définir ou réinitialiser la date de fin à 9 jours
+    function resetCountdown() {
+        const now = new Date(); // Obtenir la date actuelle
+        now.setDate(now.getDate() + 9); // Ajouter 9 jours
+        const newCountdownDate = now.getTime(); // Convertir en millisecondes
+        localStorage.setItem(countdownKey, newCountdownDate); // Sauvegarder dans le stockage local
+        return newCountdownDate; // Retourner la nouvelle date
+    }
 
-    
-
-  
-// Si la date de fin n'existe pas ou est expirée, définir une nouvelle date de fin
-    
-   
-if (!countdownDate || parseInt(countdownDate, 10) < now) {
-        
- 
-// Ajouter 9 jours à la date actuelle
-        
-        co
-const futureDate = new Date();
-        futureDate.
-        futureDat
-
-        f
-
- 
-setDate(futureDate.getDate() + 9);  // Ajouter 9 jours
-        countdownDate = futureDate.
-       
-getTime(); // Stocker la nouvelle date de fin
-        localStorage.setItem(countdownKey, countdownDate); // Sauvegarder dans localStorage
+    // Vérifier si une date existe déjà
+    let countdownDate = localStorage.getItem(countdownKey);
+    if (!countdownDate || parseInt(countdownDate, 10) < new Date().getTime()) {
+        // Si aucune date ou si elle est expirée, réinitialiser à 9 jours
+        countdownDate = resetCountdown();
+    } else {
+        // Convertir en entier si la date existe
+        countdownDate = parseInt(countdownDate, 10);
     }
 
     // Fonction pour mettre à jour le compte à rebours
     function updateCountdown() {
-        const distance = parseInt(countdownDate, 10) - new Date().getTime();
+        const now = new Date().getTime(); // Temps actuel en millisecondes
+        const distance = countdownDate - now; // Calculer la différence
 
         if (distance < 0) {
             document.querySelector('.countdown').innerHTML = "Temps écoulé !";
             return;
         }
 
+        // Calcul des jours, heures, minutes et secondes
         const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
         const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
-        
-
- 
-document.getElementById("days").textContent = String(jours).padStart(2, '0');
+        // Mise à jour de l'affichage
+        document.getElementById("days").textContent = String(jours).padStart(2, '0');
         document.getElementById("hours").textContent = String(heures).padStart(2, '0');
         document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        
-    
-document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
+        document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
     // Mettre à jour toutes les secondes
     setInterval(updateCountdown, 1000);
-    
-    upda
-updateCountdown();
+    updateCountdown();
+
+    // Gestion du bouton de réinitialisation
+    document.getElementById('resetCountdown').addEventListener('click', () => {
+        countdownDate = resetCountdown(); // Réinitialiser à 9 jours
+        alert("Le compte à rebours a été réinitialisé à 9 jours !");
+    });
 });
+
 
 // Gestion Google Maps (si nécessaire)
 if (typeof google !== 'undefined' && google.maps) {
