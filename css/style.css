@@ -8,6 +8,18 @@
     --bs-primary: #bfdbfe;
 }
 
+.countdown span {
+    display: inline-block;
+    font-size: 2rem;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.countdown span.animate {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+
     .text-primary {
         color: #1271e5 !important; /* Bleu clair */
     }
