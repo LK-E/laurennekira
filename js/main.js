@@ -100,40 +100,50 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-    // Compte à rebours
-    const countdownKey = "countdownDate";
+document.addEventListener('DOMContentLoaded', () => {
+    const countdownKey = "countdownDate"; // Clé pour le stockage local
 
-    // Initialiser la date de fin uniquement si elle n'est pas déjà enregistrée
-    if (!localStorage.getItem(countdownKey)) {
+    // Fonction pour réinitialiser le compte à rebours à 9 jours
+    function resetCountdown() {
         const now = new Date();
-        now.setDate(now.getDate() + 9); // Fixe le compte à rebours à 9 jours
-        localStorage.setItem(countdownKey, now.getTime());
+        now.setDate(now.getDate() + 9); // Ajouter 9 jours à partir de maintenant
+        localStorage.setItem(countdownKey, now.getTime()); // Sauvegarder la nouvelle date de fin
     }
 
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const countdownDate = parseInt(localStorage.getItem(countdownKey), 10);
+    // Réinitialiser le compte à rebours si besoin (supprimez cette ligne si ce n'est pas nécessaire)
+    resetCountdown();
 
-        const distance = countdownDate - now;
+    // Fonction pour mettre à jour l'affichage du compte à rebours
+    function updateCountdown() {
+        const now = new Date().getTime(); // Temps actuel en millisecondes
+        const countdownDate = parseInt(localStorage.getItem(countdownKey), 10); // Récupérer la date enregistrée
+
+        const distance = countdownDate - now; // Calculer la différence
 
         if (distance < 0) {
             document.querySelector('.countdown').innerHTML = "Temps écoulé !";
             return;
         }
 
+        // Calcul des jours, heures, minutes et secondes restants
         const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
         const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
+        // Mettre à jour les éléments HTML
         document.getElementById("days").textContent = String(jours).padStart(2, '0');
         document.getElementById("hours").textContent = String(heures).padStart(2, '0');
         document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
         document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
+    // Mettre à jour le compte à rebours chaque seconde
     setInterval(updateCountdown, 1000);
+
+    // Initialiser le compte à rebours
     updateCountdown();
+});
 
     // Carte Google Maps
     if (typeof google !== 'undefined' && google.maps) {
