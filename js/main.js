@@ -100,23 +100,42 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-    // Initialisation de la clé pour le compte à rebours
-    const countdownKey = "countdownDate";
-
-    // Fonction pour ajouter un certain nombre de jours au compte à rebours
-    function resetCountdown(daysToAdd) {
-        const now = new Date();
-        now.setDate(now.getDate() + daysToAdd);
-        localStorage.setItem(countdownKey, now.getTime());
-    }
+    
+ 
+const countdownKey = "countdownDate";
 
     // Vérification ou réinitialisation du compte à rebours
-    let countdownDate = localStorage.getItem(countdownKey);
-    const now = new Date().getTime();
+    
+  
+let countdownDate = localStorage.getItem(countdownKey);
+    
+ 
+const now = new Date().getTime();
 
-    if (!countdownDate || parseInt(countdownDate, 10) < now) {
-        resetCountdown(5); // Ajouter 5 jours
-        countdownDate = localStorage.getItem(countdownKey);
+    
+
+  
+// Si la date de fin n'existe pas ou est expirée, définir une nouvelle date de fin
+    
+   
+if (!countdownDate || parseInt(countdownDate, 10) < now) {
+        
+ 
+// Ajouter 9 jours à la date actuelle
+        
+        co
+const futureDate = new Date();
+        futureDate.
+        futureDat
+
+        f
+
+ 
+setDate(futureDate.getDate() + 9);  // Ajouter 9 jours
+        countdownDate = futureDate.
+       
+getTime(); // Stocker la nouvelle date de fin
+        localStorage.setItem(countdownKey, countdownDate); // Sauvegarder dans localStorage
     }
 
     // Fonction pour mettre à jour le compte à rebours
@@ -133,15 +152,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const secondes = Math.floor((distance % (1000 * 60)) / 1000);
 
-        document.getElementById("days").textContent = String(jours).padStart(2, '0');
+        
+
+ 
+document.getElementById("days").textContent = String(jours).padStart(2, '0');
         document.getElementById("hours").textContent = String(heures).padStart(2, '0');
         document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
+        
+    
+document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
     // Mettre à jour toutes les secondes
     setInterval(updateCountdown, 1000);
-    updateCountdown();
+    
+    upda
+updateCountdown();
 });
 
 // Gestion Google Maps (si nécessaire)
