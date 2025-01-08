@@ -100,12 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     }
 
-    // Gestion du compte à rebours
+document.addEventListener('DOMContentLoaded', () => {
     const countdownKey = "countdownDate";
 
+    // Initialiser la date de fin uniquement si elle n'est pas déjà enregistrée
     if (!localStorage.getItem(countdownKey)) {
         const now = new Date();
-        now.setDate(now.getDate() + 5); // 5 jours à partir de maintenant
+        now.setDate(now.getDate() + 9); // Fixe le compte à rebours à 9 jours
         localStorage.setItem(countdownKey, now.getTime());
     }
 
@@ -133,6 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
+});
+
 
     // Carte Google Maps
     if (typeof google !== 'undefined' && google.maps) {
