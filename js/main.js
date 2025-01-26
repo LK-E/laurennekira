@@ -117,42 +117,22 @@ document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
     const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+    const globalStartTimestamp = Date.UTC(2025, 0, 1, 0, 0, 0); // Base fixe : 1er janvier 2025 à minuit UTC
 
-    // Fonction pour obtenir ou définir la date de fin du compte à rebours
-    function getOrSetCountdownEndDate() {
-        // Vérifie si une date de fin est déjà enregistrée
-        let storedEndDate = localStorage.getItem('countdownEndDate');
-        let endDate;
-
-        if (storedEndDate) {
-            endDate = new Date(storedEndDate);
-        } else {
-            // Si aucune date de fin enregistrée, définir une nouvelle date de fin dans 14 jours
-            endDate = new Date(Date.now() + countdownDuration);
-            localStorage.setItem('countdownEndDate', endDate.toISOString());
-        }
-
-        return endDate;
+    function calculateNextEndDate() {
+        const now = Date.now();
+        const elapsedTime = now - globalStartTimestamp; // Temps écoulé depuis le départ
+        const cycles = Math.floor(elapsedTime / countdownDuration); // Nombre de cycles écoulés
+        return globalStartTimestamp + (cycles + 1) * countdownDuration; // Timestamp de la prochaine fin
     }
 
-    // Fonction pour réinitialiser la date de fin du compte à rebours
-    function resetCountdown() {
-        // Redéfinir la date de fin dans 14 jours
-        const newEndDate = new Date(Date.now() + countdownDuration);
-        localStorage.setItem('countdownEndDate', newEndDate.toISOString());
-        return newEndDate;
-    }
-
-    // Fonction pour mettre à jour le compte à rebours
     function updateCountdown() {
-        const now = new Date().getTime(); // Heure actuelle en millisecondes
-        const countdownEndDate = getOrSetCountdownEndDate();
-        const distance = countdownEndDate.getTime() - now; // Temps restant
+        const now = Date.now();
+        const countdownEndDate = calculateNextEndDate();
+        const distance = countdownEndDate - now; // Temps restant en millisecondes
 
         if (distance < 0) {
-            // Si le temps est écoulé, réinitialiser et redémarrer
-            resetCountdown();
-            updateCountdown(); // Relancer immédiatement la mise à jour
+            updateCountdown(); // Relancer immédiatement
             return;
         }
 
@@ -173,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
+
 
 
     function initMap() {
