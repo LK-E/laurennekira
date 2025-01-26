@@ -113,29 +113,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Changer le mot toutes les 2 secondes
         setInterval(rotateWords, 2000);
     });
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
-    let countdownEndDate = null;
+    // Durée du compte à rebours : 14 jours en millisecondes
+    const countdownDuration = 14 * 24 * 60 * 60 * 1000;
 
-    async function fetchCountdownEndDate() {
-        try {
-            const response = await fetch('http://localhost:3000/get-countdown'); // Adresse du serveur
-            const data = await response.json();
-            countdownEndDate = new Date(data.endDate);
-        } catch (error) {
-            console.error("Erreur lors de la récupération de la date de fin :", error);
-        }
+    function getCurrentCycleEndTime() {
+        const now = Date.now(); // Heure actuelle en millisecondes
+        const startTime = new Date('2025-01-01T00:00:00Z').getTime(); // Point de départ universel
+
+        // Calcul du cycle actuel
+        const elapsed = now - startTime;
+        const cyclesCompleted = Math.floor(elapsed / countdownDuration);
+        const currentCycleEnd = startTime + (cyclesCompleted + 1) * countdownDuration;
+
+        return currentCycleEnd;
     }
 
     function updateCountdown() {
-        if (!countdownEndDate) return; // Attendre que la date soit récupérée
-
-        const now = new Date().getTime(); // Heure actuelle en millisecondes
-        const distance = countdownEndDate.getTime() - now; // Temps restant
+        const now = Date.now(); // Heure actuelle en millisecondes
+        const countdownEndDate = getCurrentCycleEndTime();
+        const distance = countdownEndDate - now; // Temps restant
 
         if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+            // Si le temps est écoulé, relancer le calcul (peu probable ici)
+            updateCountdown();
             return;
         }
 
@@ -152,13 +155,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
-    // Récupérer la date de fin, puis démarrer le compte à rebours
-    await fetchCountdownEndDate();
+    // Mettre à jour le compte à rebours chaque seconde
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
-
-
 
     function initMap() {
         // Coordonnées de Ngeme, Limbe
