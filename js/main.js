@@ -114,46 +114,27 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(rotateWords, 2000);
     });
 document.addEventListener('DOMContentLoaded', () => {
-    "use strict";
+    // Récupérer la date de fin du compte à rebours dans le localStorage ou calculer une nouvelle
+    let countdownDate = localStorage.getItem('countdownDate');
 
-    const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
-
-    // Fonction pour obtenir ou définir la date de fin du compte à rebours
-    function getOrSetCountdownEndDate() {
-        // Vérifie si une date de fin est déjà enregistrée
-        let storedEndDate = localStorage.getItem('countdownEndDate');
-        let endDate;
-
-        if (storedEndDate) {
-            endDate = new Date(storedEndDate);
-        } else {
-            // Si aucune date de fin enregistrée, définir une nouvelle date de fin dans 14 jours
-            endDate = new Date(Date.now() + countdownDuration);
-            localStorage.setItem('countdownEndDate', endDate.toISOString());
-        }
-
-        return endDate;
+    if (!countdownDate) {
+        // Si aucune date n'est définie, définissez une nouvelle date limite de 14 jours à partir de maintenant
+        countdownDate = new Date();
+        countdownDate.setDate(countdownDate.getDate() + 14); // Ajouter 14 jours
+        localStorage.setItem('countdownDate', countdownDate);
+    } else {
+        countdownDate = new Date(countdownDate);
     }
 
-    // Fonction pour réinitialiser la date de fin du compte à rebours
-    function resetCountdown() {
-        // Redéfinir la date de fin dans 14 jours
-        const newEndDate = new Date(Date.now() + countdownDuration);
-        localStorage.setItem('countdownEndDate', newEndDate.toISOString());
-        return newEndDate;
-    }
-
-    // Fonction pour mettre à jour le compte à rebours
     function updateCountdown() {
         const now = new Date().getTime(); // Heure actuelle en millisecondes
-        const countdownEndDate = getOrSetCountdownEndDate();
-        const distance = countdownEndDate.getTime() - now; // Temps restant
+        const distance = countdownDate.getTime() - now; // Temps restant
 
         if (distance < 0) {
-            // Si le temps est écoulé, réinitialiser et redémarrer
-            resetCountdown();
-            updateCountdown(); // Relancer immédiatement la mise à jour
-            return;
+            // Si le temps est écoulé, définissez une nouvelle date de compte à rebours et mettez à jour le localStorage
+            countdownDate = new Date();
+            countdownDate.setDate(countdownDate.getDate() + 14); // Ajouter 14 jours
+            localStorage.setItem('countdownDate', countdownDate);
         }
 
         // Calcul des jours, heures, minutes, secondes
