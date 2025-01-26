@@ -116,15 +116,40 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
-    // Définir une date limite universelle : 16 jours après une date initiale (8 janvier 2025 à 12h UTC)
-    const countdownEndDate = new Date('2025-01-24T12:00:00Z'); // Date fixe à 16 jours après 2025-01-08
+    const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+
+    function getOrSetCountdownEndDate() {
+        // Vérifie si une date de fin est déjà enregistrée
+        let storedEndDate = localStorage.getItem('countdownEndDate');
+        let endDate;
+
+        if (storedEndDate) {
+            endDate = new Date(storedEndDate);
+        } else {
+            // Si aucune date de fin enregistrée, en définir une nouvelle
+            endDate = new Date(Date.now() + countdownDuration);
+            localStorage.setItem('countdownEndDate', endDate.toISOString());
+        }
+
+        return endDate;
+    }
+
+    function resetCountdown() {
+        // Redéfinir la date de fin et l'enregistrer
+        const newEndDate = new Date(Date.now() + countdownDuration);
+        localStorage.setItem('countdownEndDate', newEndDate.toISOString());
+        return newEndDate;
+    }
 
     function updateCountdown() {
         const now = new Date().getTime(); // Heure actuelle en millisecondes
+        const countdownEndDate = getOrSetCountdownEndDate();
         const distance = countdownEndDate.getTime() - now; // Temps restant
 
         if (distance < 0) {
-            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
+            // Si le temps est écoulé, réinitialiser et redémarrer
+            resetCountdown();
+            updateCountdown(); // Relancer immédiatement la mise à jour
             return;
         }
 
@@ -145,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
+
 
 
     function initMap() {
