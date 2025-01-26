@@ -113,43 +113,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // Changer le mot toutes les 2 secondes
         setInterval(rotateWords, 2000);
     });
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     "use strict";
 
-    const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+    let countdownEndDate = null;
 
-    function getOrSetCountdownEndDate() {
-        // Vérifie si une date de fin est déjà enregistrée
-        let storedEndDate = localStorage.getItem('countdownEndDate');
-        let endDate;
-
-        if (storedEndDate) {
-            endDate = new Date(storedEndDate);
-        } else {
-            // Si aucune date de fin enregistrée, en définir une nouvelle
-            endDate = new Date(Date.now() + countdownDuration);
-            localStorage.setItem('countdownEndDate', endDate.toISOString());
+    async function fetchCountdownEndDate() {
+        try {
+            const response = await fetch('http://localhost:3000/get-countdown'); // Adresse du serveur
+            const data = await response.json();
+            countdownEndDate = new Date(data.endDate);
+        } catch (error) {
+            console.error("Erreur lors de la récupération de la date de fin :", error);
         }
-
-        return endDate;
-    }
-
-    function resetCountdown() {
-        // Redéfinir la date de fin et l'enregistrer
-        const newEndDate = new Date(Date.now() + countdownDuration);
-        localStorage.setItem('countdownEndDate', newEndDate.toISOString());
-        return newEndDate;
     }
 
     function updateCountdown() {
+        if (!countdownEndDate) return; // Attendre que la date soit récupérée
+
         const now = new Date().getTime(); // Heure actuelle en millisecondes
-        const countdownEndDate = getOrSetCountdownEndDate();
         const distance = countdownEndDate.getTime() - now; // Temps restant
 
         if (distance < 0) {
-            // Si le temps est écoulé, réinitialiser et redémarrer
-            resetCountdown();
-            updateCountdown(); // Relancer immédiatement la mise à jour
+            document.querySelector('.countdown').innerHTML = "Temps écoulé !";
             return;
         }
 
@@ -166,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
-    // Exécuter la fonction immédiatement et toutes les secondes
+    // Récupérer la date de fin, puis démarrer le compte à rebours
+    await fetchCountdownEndDate();
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
