@@ -116,26 +116,23 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
-    // Durée du compte à rebours : 14 jours en millisecondes
-    const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en ms
+    const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+    const startTime = new Date('2025-01-01T00:00:00Z').getTime(); // Point de départ universel (UTC)
 
-    // Point de départ universel fixe
-    const startTime = new Date('2025-01-01T00:00:00Z').getTime();
-
-    function getCurrentCycleEndTime() {
+    function getCurrentCycleEndDate() {
         const now = Date.now(); // Heure actuelle
-        const elapsed = now - startTime; // Temps écoulé depuis le début
+        const elapsed = now - startTime; // Temps écoulé depuis le point de départ
         const cyclesCompleted = Math.floor(elapsed / countdownDuration); // Nombre de cycles terminés
-        return startTime + (cyclesCompleted + 1) * countdownDuration; // Fin du cycle actuel
+        return startTime + (cyclesCompleted + 1) * countdownDuration; // Fin du cycle en cours
     }
 
     function updateCountdown() {
         const now = Date.now(); // Heure actuelle
-        const countdownEndDate = getCurrentCycleEndTime(); // Fin du cycle en cours
+        const countdownEndDate = getCurrentCycleEndDate(); // Fin du cycle actuel
         const distance = countdownEndDate - now; // Temps restant
 
         if (distance <= 0) {
-            // Redémarrer immédiatement si le temps est écoulé
+            // Redémarrer immédiatement le cycle si nécessaire
             updateCountdown();
             return;
         }
@@ -153,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
-    // Mise à jour toutes les secondes
+    // Mettre à jour toutes les secondes
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
