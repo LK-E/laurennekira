@@ -117,32 +117,30 @@ document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
     // Durée du compte à rebours : 14 jours en millisecondes
-    const countdownDuration = 14 * 24 * 60 * 60 * 1000;
+    const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en ms
+
+    // Point de départ universel
+    const startTime = new Date('2025-01-01T00:00:00Z').getTime();
 
     function getCurrentCycleEndTime() {
         const now = Date.now(); // Heure actuelle en millisecondes
-        const startTime = new Date('2025-01-01T00:00:00Z').getTime(); // Point de départ universel
-
-        // Calcul du cycle actuel
-        const elapsed = now - startTime;
-        const cyclesCompleted = Math.floor(elapsed / countdownDuration);
-        const currentCycleEnd = startTime + (cyclesCompleted + 1) * countdownDuration;
-
-        return currentCycleEnd;
+        const elapsed = now - startTime; // Temps écoulé depuis le début
+        const cyclesCompleted = Math.floor(elapsed / countdownDuration); // Nombre de cycles terminés
+        return startTime + (cyclesCompleted + 1) * countdownDuration; // Date de fin du cycle en cours
     }
 
     function updateCountdown() {
-        const now = Date.now(); // Heure actuelle en millisecondes
-        const countdownEndDate = getCurrentCycleEndTime();
-        const distance = countdownEndDate - now; // Temps restant
+        const now = Date.now(); // Heure actuelle
+        const countdownEndDate = getCurrentCycleEndTime(); // Date de fin du cycle actuel
+        const distance = countdownEndDate - now; // Temps restant en millisecondes
 
-        if (distance < 0) {
-            // Si le temps est écoulé, relancer le calcul (peu probable ici)
+        if (distance <= 0) {
+            // Redémarrer immédiatement si le temps est écoulé (improbable ici)
             updateCountdown();
             return;
         }
 
-        // Calcul des jours, heures, minutes, secondes
+        // Calcul des jours, heures, minutes et secondes restants
         const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
         const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -155,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
     }
 
-    // Mettre à jour le compte à rebours chaque seconde
+    // Exécuter la mise à jour chaque seconde
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
