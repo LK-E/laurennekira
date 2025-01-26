@@ -117,39 +117,22 @@ document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
     const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
-
-    function getOrSetCountdownEndDate() {
-        // Vérifie si une date de fin est déjà enregistrée
-        let storedEndDate = localStorage.getItem('countdownEndDate');
-        let endDate;
-
-        if (storedEndDate) {
-            endDate = new Date(storedEndDate);
-        } else {
-            // Si aucune date de fin enregistrée, en définir une nouvelle
-            endDate = new Date(Date.now() + countdownDuration);
-            localStorage.setItem('countdownEndDate', endDate.toISOString());
-        }
-
-        return endDate;
-    }
-
-    function resetCountdown() {
-        // Redéfinir la date de fin et l'enregistrer
-        const newEndDate = new Date(Date.now() + countdownDuration);
-        localStorage.setItem('countdownEndDate', newEndDate.toISOString());
-        return newEndDate;
+    const globalStartTimestamp = 1700000000000; // Timestamp de départ global (en millisecondes)
+    
+    function calculateNextEndDate() {
+        const now = Date.now();
+        const elapsedTime = now - globalStartTimestamp;
+        const cycles = Math.floor(elapsedTime / countdownDuration);
+        return new Date(globalStartTimestamp + (cycles + 1) * countdownDuration);
     }
 
     function updateCountdown() {
-        const now = new Date().getTime(); // Heure actuelle en millisecondes
-        const countdownEndDate = getOrSetCountdownEndDate();
-        const distance = countdownEndDate.getTime() - now; // Temps restant
+        const now = Date.now();
+        const countdownEndDate = calculateNextEndDate();
+        const distance = countdownEndDate - now; // Temps restant
 
         if (distance < 0) {
-            // Si le temps est écoulé, réinitialiser et redémarrer
-            resetCountdown();
-            updateCountdown(); // Relancer immédiatement la mise à jour
+            updateCountdown(); // Relancer immédiatement
             return;
         }
 
@@ -170,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
+
 
 
     function initMap() {
