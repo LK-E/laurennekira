@@ -117,13 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
     const countdownDuration = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
-    const globalStartTimestamp = 1700000000000; // Timestamp de départ global (en millisecondes)
-    
+    const globalStartTimestamp = 1700000000000; // Point de départ fixe (exemple)
+
     function calculateNextEndDate() {
         const now = Date.now();
         const elapsedTime = now - globalStartTimestamp;
-        const cycles = Math.floor(elapsedTime / countdownDuration);
-        return new Date(globalStartTimestamp + (cycles + 1) * countdownDuration);
+        const cycles = Math.floor(elapsedTime / countdownDuration); // Nombre de cycles de 14 jours écoulés
+        return new Date(globalStartTimestamp + (cycles + 1) * countdownDuration); // Prochaine date de fin
     }
 
     function updateCountdown() {
