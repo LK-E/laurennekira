@@ -106,21 +106,22 @@ document.addEventListener('DOMContentLoaded', () => {
         seconds: document.getElementById('seconds')
     };
 
-    // Définir la date de fin en UTC
-    const countdownEndDate = new Date("2025-02-10T10:00:00Z").getTime(); // Remplacez par votre date
+    // Date de fin UTC
+    const countdownEndDate = new Date("2025-02-10T10:00:00Z").getTime();
 
     function updateCountdown() {
-        const now = new Date().getTime(); // Obtenir l'heure actuelle en UTC
-        const distance = countdownEndDate - now; // Calculer le temps restant
+        const nowUTC = new Date().getTime(); // Obtenir l'heure actuelle en UTC
+        const distance = countdownEndDate - nowUTC; // Temps restant
 
         if (distance <= 0) {
-            // Si le compte à rebours est terminé, redémarrer pour 14 jours
-            const newEndDate = new Date();
-            newEndDate.setUTCDate(newEndDate.getUTCDate() + 14); // Ajouter 14 jours
-            countdownEndDate = newEndDate.getTime();
+            countdownDisplay.days.textContent = '00';
+            countdownDisplay.hours.textContent = '00';
+            countdownDisplay.minutes.textContent = '00';
+            countdownDisplay.seconds.textContent = '00';
+            return;
         }
 
-        // Calculer les jours, heures, minutes, secondes
+        // Calcul des jours, heures, minutes, secondes
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -133,9 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         countdownDisplay.seconds.textContent = String(seconds).padStart(2, '0');
     }
 
-    // Mettre à jour le compte à rebours toutes les secondes
+    // Mise à jour toutes les secondes
     setInterval(updateCountdown, 1000);
-    updateCountdown(); // Mettre à jour immédiatement
+    updateCountdown();
 });
 
 
