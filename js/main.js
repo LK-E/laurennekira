@@ -116,29 +116,33 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const SECONDS_IN_A_DAY = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
 
-    // Récupérer ou initialiser l'heure de fin dans le localStorage
-    let countdownEndTime = localStorage.getItem('countdownEndTime');
+    // Stocker ou récupérer la date de départ du compte à rebours
+    let countdownStartTime = localStorage.getItem('countdownStartTime');
 
-    if (!countdownEndTime) {
-        // Si aucune date n'est définie, définissez une nouvelle fin à 14 jours
-        countdownEndTime = Date.now() + SECONDS_IN_A_DAY;
-        localStorage.setItem('countdownEndTime', countdownEndTime);
+    if (!countdownStartTime) {
+        // Si aucune date de départ n'existe, définir une date initiale et la stocker
+        countdownStartTime = Date.now();
+        localStorage.setItem('countdownStartTime', countdownStartTime);
     } else {
-        countdownEndTime = parseInt(countdownEndTime, 10);
+        countdownStartTime = parseInt(countdownStartTime, 10);
     }
 
+    // Calculer la date de fin basée sur la date de départ
+    let countdownEndTime = countdownStartTime + SECONDS_IN_A_DAY;
+
     function updateCountdown() {
-        const now = Date.now(); // Heure actuelle synchronisée à partir du système local
+        const now = Date.now(); // Heure actuelle en millisecondes UTC
         let timeRemaining = countdownEndTime - now;
 
         if (timeRemaining <= 0) {
-            // Si le compte à rebours est terminé, redémarrer pour 14 jours
-            countdownEndTime = Date.now() + SECONDS_IN_A_DAY;
-            localStorage.setItem('countdownEndTime', countdownEndTime);
-            timeRemaining = countdownEndTime - Date.now();
+            // Si le temps est écoulé, relancer un nouveau cycle de 14 jours
+            countdownStartTime = Date.now(); // Nouvelle heure de départ
+            countdownEndTime = countdownStartTime + SECONDS_IN_A_DAY; // Nouvelle heure de fin
+            localStorage.setItem('countdownStartTime', countdownStartTime); // Stocker la nouvelle heure de départ
+            timeRemaining = countdownEndTime - Date.now(); // Recalculer le temps restant
         }
 
-        // Calculer les jours, heures, minutes et secondes
+        // Calculer les jours, heures, minutes et secondes restants
         const jours = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
         const heures = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
@@ -155,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCountdown, 1000);
     updateCountdown();
 });
-
 
 
     function initMap() {
