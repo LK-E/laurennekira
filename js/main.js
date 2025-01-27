@@ -106,48 +106,48 @@ document.addEventListener('DOMContentLoaded', () => {
         seconds: document.getElementById('seconds')
     };
 
-    let countdownEndDate;
+    // Récupérer ou initialiser la date de fin du compte à rebours
+    let countdownEndDate = localStorage.getItem('countdownEndDate');
+    if (!countdownEndDate) {
+        const now = new Date();
+        now.setDate(now.getDate() + 14); // Ajouter 14 jours
+        countdownEndDate = now.toISOString(); // Convertir en chaîne de caractères
+        localStorage.setItem('countdownEndDate', countdownEndDate); // Stocker dans localStorage
+    }
 
+    countdownEndDate = new Date(countdownEndDate); // Convertir en objet Date
+
+    // Fonction pour mettre à jour le compte à rebours
     function updateCountdown() {
-        if (!countdownEndDate) return;
-
         const now = new Date().getTime();
         const distance = countdownEndDate.getTime() - now;
 
         if (distance <= 0) {
-            countdownDisplay.days.textContent = '00';
-            countdownDisplay.hours.textContent = '00';
-            countdownDisplay.minutes.textContent = '00';
-            countdownDisplay.seconds.textContent = '00';
-            return;
+            // Si le compte à rebours est terminé, redémarrer un nouveau
+            const newEndDate = new Date();
+            newEndDate.setDate(newEndDate.getDate() + 14); // Ajouter 14 jours
+            countdownEndDate = newEndDate;
+            localStorage.setItem('countdownEndDate', countdownEndDate.toISOString()); // Mettre à jour dans localStorage
         }
 
+        // Calculer les jours, heures, minutes, secondes
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+        // Mettre à jour l'affichage
         countdownDisplay.days.textContent = String(days).padStart(2, '0');
         countdownDisplay.hours.textContent = String(hours).padStart(2, '0');
         countdownDisplay.minutes.textContent = String(minutes).padStart(2, '0');
         countdownDisplay.seconds.textContent = String(seconds).padStart(2, '0');
     }
 
-    async function fetchCountdownDate() {
-        try {
-            const response = await fetch('http://localhost:3000/countdown');
-            const data = await response.json();
-            console.log('Countdown date:', data.countdownEndDate); // Debug log
-            countdownEndDate = new Date(data.countdownEndDate); // Assurez-vous que c'est un objet Date
-            updateCountdown();
-        } catch (error) {
-            console.error('Erreur lors de la récupération de la date de fin :', error);
-        }
-    }
-
-    fetchCountdownDate();
+    // Mettre à jour le compte à rebours chaque seconde
     setInterval(updateCountdown, 1000);
+    updateCountdown(); // Lancer immédiatement la mise à jour
 });
+
 
 
 // Carte Google Maps
