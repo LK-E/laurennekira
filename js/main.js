@@ -99,36 +99,42 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(rotateWords, 2000);
 });
 
-// Compte à rebours synchronisé (14 jours)
 document.addEventListener('DOMContentLoaded', () => {
     const CYCLE_DURATION = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
-    const REFERENCE_DATE = new Date("2025-01-01T00:00:00Z").getTime();
+    const REFERENCE_DATE = new Date("2025-01-01T00:00:00Z").getTime(); // Date de référence
 
-    function getNextCycleEnd(currentTime) {
-        const elapsedTime = currentTime - REFERENCE_DATE;
-        const cyclesCompleted = Math.floor(elapsedTime / CYCLE_DURATION);
-        return REFERENCE_DATE + (cyclesCompleted + 1) * CYCLE_DURATION;
-    }
-
-    function updateCountdown() {
+    function calculateTimeRemaining() {
         const now = Date.now();
-        const nextCycleEnd = getNextCycleEnd(now);
-        const timeRemaining = nextCycleEnd - now;
+        const elapsedTime = now - REFERENCE_DATE;
+        const currentCycle = elapsedTime % CYCLE_DURATION;
+        const timeRemaining = CYCLE_DURATION - currentCycle;
 
+        // Calcul des jours, heures, minutes et secondes restants
         const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
         const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
+        return { days, hours, minutes, seconds };
+    }
+
+    function updateCountdownDisplay() {
+        const { days, hours, minutes, seconds } = calculateTimeRemaining();
+
+        // Mise à jour du DOM
         document.getElementById("days").textContent = String(days).padStart(2, '0');
         document.getElementById("hours").textContent = String(hours).padStart(2, '0');
         document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
         document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    // Mise à jour toutes les secondes
+    setInterval(updateCountdownDisplay, 1000);
+
+    // Initialisation immédiate
+    updateCountdownDisplay();
 });
+
 
 // Carte Google Maps
 function initMap() {
