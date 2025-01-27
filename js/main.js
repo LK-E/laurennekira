@@ -113,53 +113,42 @@ document.addEventListener('DOMContentLoaded', () => {
         // Changer le mot toutes les 2 secondes
         setInterval(rotateWords, 2000);
     });
-document.addEventListener('DOMContentLoaded', () => {
-    const SECONDS_IN_A_DAY = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+ document.addEventListener('DOMContentLoaded', () => {
+            const SECONDS_IN_A_DAY = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+            const CENTRAL_START_DATE = new Date("2025-01-01T00:00:00Z").getTime(); // Date fixe universelle
 
-    // Stocker ou récupérer la date de départ du compte à rebours
-    let countdownStartTime = localStorage.getItem('countdownStartTime');
+            function getNextEndDate(currentTime) {
+                const elapsedTime = currentTime - CENTRAL_START_DATE;
+                const cyclesCompleted = Math.floor(elapsedTime / SECONDS_IN_A_DAY);
+                return CENTRAL_START_DATE + (cyclesCompleted + 1) * SECONDS_IN_A_DAY;
+            }
 
-    if (!countdownStartTime) {
-        // Si aucune date de départ n'existe, définir une date initiale et la stocker
-        countdownStartTime = Date.now();
-        localStorage.setItem('countdownStartTime', countdownStartTime);
-    } else {
-        countdownStartTime = parseInt(countdownStartTime, 10);
-    }
+            function updateCountdown() {
+                const now = Date.now(); // Heure actuelle en millisecondes UTC
+                const countdownEndTime = getNextEndDate(now); // Date de fin actuelle du cycle
+                const timeRemaining = countdownEndTime - now;
 
-    // Calculer la date de fin basée sur la date de départ
-    let countdownEndTime = countdownStartTime + SECONDS_IN_A_DAY;
+                if (timeRemaining <= 0) {
+                    return; // Impossible car `getNextEndDate` gère les cycles
+                }
 
-    function updateCountdown() {
-        const now = Date.now(); // Heure actuelle en millisecondes UTC
-        let timeRemaining = countdownEndTime - now;
+                // Calculer les jours, heures, minutes et secondes restants
+                const jours = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const heures = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const secondes = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-        if (timeRemaining <= 0) {
-            // Si le temps est écoulé, relancer un nouveau cycle de 14 jours
-            countdownStartTime = Date.now(); // Nouvelle heure de départ
-            countdownEndTime = countdownStartTime + SECONDS_IN_A_DAY; // Nouvelle heure de fin
-            localStorage.setItem('countdownStartTime', countdownStartTime); // Stocker la nouvelle heure de départ
-            timeRemaining = countdownEndTime - Date.now(); // Recalculer le temps restant
-        }
+                // Mettre à jour les éléments HTML
+                document.getElementById("days").textContent = String(jours).padStart(2, '0');
+                document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+                document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+                document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
+            }
 
-        // Calculer les jours, heures, minutes et secondes restants
-        const jours = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-        const heures = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const secondes = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-        // Mettre à jour les éléments HTML
-        document.getElementById("days").textContent = String(jours).padStart(2, '0');
-        document.getElementById("hours").textContent = String(heures).padStart(2, '0');
-        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
-    }
-
-    // Mettre à jour toutes les secondes
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-});
-
+            // Mettre à jour toutes les secondes
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
 
     function initMap() {
         // Coordonnées de Ngeme, Limbe
