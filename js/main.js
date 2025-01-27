@@ -108,12 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let countdownEndDate;
 
-    // Fonction pour mettre à jour l'affichage du compte à rebours
     function updateCountdown() {
         if (!countdownEndDate) return;
 
         const now = new Date().getTime();
-        const distance = new Date(countdownEndDate).getTime() - now;
+        const distance = countdownEndDate.getTime() - now;
 
         if (distance <= 0) {
             countdownDisplay.days.textContent = '00';
@@ -134,22 +133,22 @@ document.addEventListener('DOMContentLoaded', () => {
         countdownDisplay.seconds.textContent = String(seconds).padStart(2, '0');
     }
 
-    // Fonction pour récupérer la date de fin depuis le serveur
     async function fetchCountdownDate() {
         try {
             const response = await fetch('http://localhost:3000/countdown');
             const data = await response.json();
-            countdownEndDate = data.countdownEndDate;
-            updateCountdown(); // Mettre à jour l'affichage immédiatement
+            console.log('Countdown date:', data.countdownEndDate); // Debug log
+            countdownEndDate = new Date(data.countdownEndDate); // Assurez-vous que c'est un objet Date
+            updateCountdown();
         } catch (error) {
             console.error('Erreur lors de la récupération de la date de fin :', error);
         }
     }
 
-    // Initialiser le compte à rebours
     fetchCountdownDate();
     setInterval(updateCountdown, 1000);
 });
+
 
 // Carte Google Maps
 function initMap() {
