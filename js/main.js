@@ -113,36 +113,45 @@ document.addEventListener('DOMContentLoaded', () => {
         // Changer le mot toutes les 2 secondes
         setInterval(rotateWords, 2000);
     });
- document.addEventListener('DOMContentLoaded', () => {
-            const SECONDS_IN_A_DAY = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
-            const CENTRAL_START_DATE = new Date("2025-01-01T00:00:00Z").getTime(); // Date fixe universelle
 
-            function getNextEndDate(currentTime) {
-                const elapsedTime = currentTime - CENTRAL_START_DATE;
-                const cyclesCompleted = Math.floor(elapsedTime / SECONDS_IN_A_DAY);
-                return CENTRAL_START_DATE + (cyclesCompleted + 1) * SECONDS_IN_A_DAY;
+        document.addEventListener('DOMContentLoaded', () => {
+            const CYCLE_DURATION = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+            const REFERENCE_DATE = new Date("2025-01-01T00:00:0
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const CYCLE_DURATION = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+            const REFERENCE_DATE = new Date("2025-01-01T
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const CYCLE_DURATION = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+            const REFERENCE_DATE = new Date("202
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const CYCLE_DURATION = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
+            const REFERENCE_DATE = new Date("2025-01-01T00:00:00Z").getTime(); // Date fixe universelle
+
+            function getNextCycleEnd(currentTime) {
+                const elapsedTime = currentTime - REFERENCE_DATE;
+                const cyclesCompleted = Math.floor(elapsedTime / CYCLE_DURATION);
+                return REFERENCE_DATE + (cyclesCompleted + 1) * CYCLE_DURATION;
             }
 
             function updateCountdown() {
-                const now = Date.now(); // Heure actuelle en millisecondes UTC
-                const countdownEndTime = getNextEndDate(now); // Date de fin actuelle du cycle
-                const timeRemaining = countdownEndTime - now;
+                const now = Date.now();
+                const nextCycleEnd = getNextCycleEnd(now);
+                const timeRemaining = nextCycleEnd - now;
 
-                if (timeRemaining <= 0) {
-                    return; // Impossible car `getNextEndDate` gère les cycles
-                }
-
-                // Calculer les jours, heures, minutes et secondes restants
-                const jours = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-                const heures = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                // Calcul des jours, heures, minutes et secondes
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                const secondes = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-                // Mettre à jour les éléments HTML
-                document.getElementById("days").textContent = String(jours).padStart(2, '0');
-                document.getElementById("hours").textContent = String(heures).padStart(2, '0');
+                // Mettre à jour le DOM
+                document.getElementById("days").textContent = String(days).padStart(2, '0');
+                document.getElementById("hours").textContent = String(hours).padStart(2, '0');
                 document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-                document.getElementById("seconds").textContent = String(secondes).padStart(2, '0');
+                document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
             }
 
             // Mettre à jour toutes les secondes
