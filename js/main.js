@@ -106,28 +106,18 @@ document.addEventListener('DOMContentLoaded', () => {
         seconds: document.getElementById('seconds')
     };
 
-    // Récupérer ou initialiser la date de fin du compte à rebours
-    let countdownEndDate = localStorage.getItem('countdownEndDate');
-    if (!countdownEndDate) {
-        const now = new Date();
-        now.setDate(now.getDate() + 14); // Ajouter 14 jours
-        countdownEndDate = now.toISOString(); // Convertir en chaîne de caractères
-        localStorage.setItem('countdownEndDate', countdownEndDate); // Stocker dans localStorage
-    }
+    // Définir la date de fin en UTC
+    const countdownEndDate = new Date("2025-02-10T10:00:00Z").getTime(); // Remplacez par votre date
 
-    countdownEndDate = new Date(countdownEndDate); // Convertir en objet Date
-
-    // Fonction pour mettre à jour le compte à rebours
     function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownEndDate.getTime() - now;
+        const now = new Date().getTime(); // Obtenir l'heure actuelle en UTC
+        const distance = countdownEndDate - now; // Calculer le temps restant
 
         if (distance <= 0) {
-            // Si le compte à rebours est terminé, redémarrer un nouveau
+            // Si le compte à rebours est terminé, redémarrer pour 14 jours
             const newEndDate = new Date();
-            newEndDate.setDate(newEndDate.getDate() + 14); // Ajouter 14 jours
-            countdownEndDate = newEndDate;
-            localStorage.setItem('countdownEndDate', countdownEndDate.toISOString()); // Mettre à jour dans localStorage
+            newEndDate.setUTCDate(newEndDate.getUTCDate() + 14); // Ajouter 14 jours
+            countdownEndDate = newEndDate.getTime();
         }
 
         // Calculer les jours, heures, minutes, secondes
@@ -143,9 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
         countdownDisplay.seconds.textContent = String(seconds).padStart(2, '0');
     }
 
-    // Mettre à jour le compte à rebours chaque seconde
+    // Mettre à jour le compte à rebours toutes les secondes
     setInterval(updateCountdown, 1000);
-    updateCountdown(); // Lancer immédiatement la mise à jour
+    updateCountdown(); // Mettre à jour immédiatement
 });
 
 
