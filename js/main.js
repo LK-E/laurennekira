@@ -98,43 +98,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(rotateWords, 2000);
 });
-
 document.addEventListener('DOMContentLoaded', () => {
-    const CYCLE_DURATION = 14 * 24 * 60 * 60 * 1000; // 14 jours en millisecondes
-    const REFERENCE_DATE = new Date("2025-01-01T00:00:00Z").getTime(); // Date de référence
+    const countdownDisplay = {
+        days: document.getElementById('days'),
+        hours: document.getElementById('hours'),
+        minutes: document.getElementById('minutes'),
+        seconds: document.getElementById('seconds')
+    };
 
-    function calculateTimeRemaining() {
-        const now = Date.now();
-        const elapsedTime = now - REFERENCE_DATE;
-        const currentCycle = elapsedTime % CYCLE_DURATION;
-        const timeRemaining = CYCLE_DURATION - currentCycle;
+    let countdownEndDate;
 
-        // Calcul des jours, heures, minutes et secondes restants
-        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+    // Fonction pour mettre à jour l'affichage du compte à rebours
+    function updateCountdown() {
+        if (!countdownEndDate) return;
 
-        return { days, hours, minutes, seconds };
+        const now = new Date().getTime();
+        const distance = new Date(countdownEndDate).getTime() - now;
+
+        if (distance <= 0) {
+            countdownDisplay.days.textContent = '00';
+            countdownDisplay.hours.textContent = '00';
+            countdownDisplay.minutes.textContent = '00';
+            countdownDisplay.seconds.textContent = '00';
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownDisplay.days.textContent = String(days).padStart(2, '0');
+        countdownDisplay.hours.textContent = String(hours).padStart(2, '0');
+        countdownDisplay.minutes.textContent = String(minutes).padStart(2, '0');
+        countdownDisplay.seconds.textContent = String(seconds).padStart(2, '0');
     }
 
-    function updateCountdownDisplay() {
-        const { days, hours, minutes, seconds } = calculateTimeRemaining();
-
-        // Mise à jour du DOM
-        document.getElementById("days").textContent = String(days).padStart(2, '0');
-        document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-        document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+    // Fonction pour récupérer la date de fin depuis le serveur
+    async function fetchCountdownDate() {
+        try {
+            const response = await fetch('http://localhost:3000/countdown');
+            const data = await response.json();
+            countdownEndDate = data.countdownEndDate;
+            updateCountdown(); // Mettre à jour l'affichage immédiatement
+        } catch (error) {
+            console.error('Erreur lors de la récupération de la date de fin :', error);
+        }
     }
 
-    // Mise à jour toutes les secondes
-    setInterval(updateCountdownDisplay, 1000);
-
-    // Initialisation immédiate
-    updateCountdownDisplay();
+    // Initialiser le compte à rebours
+    fetchCountdownDate();
+    setInterval(updateCountdown, 1000);
 });
-
 
 // Carte Google Maps
 function initMap() {
